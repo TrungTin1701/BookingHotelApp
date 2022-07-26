@@ -232,15 +232,15 @@ class _MapBodyState extends State<MapBody> {
               //     child: HotelCard()),
               child: Container(
                 height: MediaQuery.of(context).size.height / 4,
-                width: double.infinity,
-                margin: EdgeInsets.only(bottom: 10),
+                width: MediaQuery.of(context).size.width,
+                //  margin: EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.4),
+                        color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.2),
                         spreadRadius: 4,
-                        blurRadius: 40,
+                        blurRadius: 8,
                         offset: Offset(3.0, 3.0), // changes position of shadow
                       )
                     ]),
@@ -249,8 +249,9 @@ class _MapBodyState extends State<MapBody> {
                     autoPlay: false,
                     enlargeCenterPage: true,
                     viewportFraction: 0.8,
-                    aspectRatio: 1.0,
+                    aspectRatio: 2.0,
                     initialPage: 0,
+                    enlargeStrategy: CenterPageEnlargeStrategy.scale,
                     onPageChanged: (index, reason) {
                       Marker temp = _list.elementAt(index);
 
@@ -309,7 +310,7 @@ class _MapBodyState extends State<MapBody> {
                 ),
               ),
               bottom: MediaQuery.of(context).size.height / 10,
-              // left: MediaQuery.of(context).size.width * 0.1,
+              left: 0,
             ),
             Positioned(
               bottom: 0,
