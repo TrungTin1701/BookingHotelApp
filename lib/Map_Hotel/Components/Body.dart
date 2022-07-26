@@ -2,7 +2,8 @@
 
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:app_settings/app_settings.dart';
+import 'package:geolocator/geolocator.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -81,6 +82,33 @@ class _MapBodyState extends State<MapBody> {
     super.initState();
   }
 
+  // My Location
+  late Position myPosition;
+  var geolocator = Geolocator();
+  Future<Position> getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Future.error("Location service is not enabled");
+      // serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error("Location permission is not granted");
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error("Location permission is not granted");
+    }
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
+  }
+
   // Load Custom Marker
   Future<Uint8List?> _myPainterToMap(String Label, Color color) async {
     ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
@@ -94,6 +122,7 @@ class _MapBodyState extends State<MapBody> {
     return byteData!.buffer.asUint8List();
   }
 
+  int count = 0;
   late GoogleMapController _controller;
   //
   CarouselController _carouselController = CarouselController();
@@ -110,7 +139,7 @@ class _MapBodyState extends State<MapBody> {
   final _streamMarkers = StreamController<Set<Marker>>.broadcast();
   StreamSink<Set<Marker>> get _sinkMarkers => _streamMarkers.sink;
   Stream<Set<Marker>> get streamMarkers => _streamMarkers.stream;
-  late bool onpagechange;
+  bool onpagechange = true;
   void _loadListMarkers(List<Marker> listtemp, Function() onFinsh) async {
     var newlist = listtemp;
     // _markers.clear();
@@ -129,6 +158,7 @@ class _MapBodyState extends State<MapBody> {
           icon:
               BitmapDescriptor.fromBytes(i == newlist.first ? bytes1! : bytes!),
           onTap: () {
+            count = 1;
             onpagechange = false;
             _sinkState.add(1);
             _carouselController.animateToPage(_list.indexOf(i),
@@ -183,10 +213,12 @@ class _MapBodyState extends State<MapBody> {
                           mapType: MapType.normal,
                           onMapCreated: (GoogleMapController controller) {
                             _controller = controller;
+                            getLocation();
                           },
                           markers: snapshot.data!,
                           myLocationButtonEnabled: false,
                           zoomControlsEnabled: true,
+                          zoomGesturesEnabled: true,
                           initialCameraPosition: value.kGooglePlex1);
                     },
                   ),
@@ -195,19 +227,20 @@ class _MapBodyState extends State<MapBody> {
             })),
             Positioned(
               // child: Container(
-              //     width: MediaQuery.of(context).size.width * 0.8,
+              //     width: MediaQuery.of(context).size.width,
               //     height: MediaQuery.of(context).size.height * 0.45,
               //     child: HotelCard()),
               child: Container(
                 height: MediaQuery.of(context).size.height / 4,
-                width: MediaQuery.of(context).size.width * 0.8,
+                width: double.infinity,
+                margin: EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
                         color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.4),
                         spreadRadius: 4,
-                        blurRadius: 8,
+                        blurRadius: 40,
                         offset: Offset(3.0, 3.0), // changes position of shadow
                       )
                     ]),
@@ -215,8 +248,8 @@ class _MapBodyState extends State<MapBody> {
                   options: CarouselOptions(
                     autoPlay: false,
                     enlargeCenterPage: true,
-                    viewportFraction: 1,
-                    aspectRatio: 2.0,
+                    viewportFraction: 0.8,
+                    aspectRatio: 1.0,
                     initialPage: 0,
                     onPageChanged: (index, reason) {
                       Marker temp = _list.elementAt(index);
@@ -248,27 +281,27 @@ class _MapBodyState extends State<MapBody> {
                   ),
                   items: [
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.4,
                         child: HotelCard()),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.4,
                         child: HotelCard()),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.4,
                         child: HotelCard()),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.4,
                         child: HotelCard()),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.4,
                         child: HotelCard()),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.4,
                         child: HotelCard()),
                   ],
@@ -276,7 +309,66 @@ class _MapBodyState extends State<MapBody> {
                 ),
               ),
               bottom: MediaQuery.of(context).size.height / 10,
-              left: MediaQuery.of(context).size.width * 0.1,
+              // left: MediaQuery.of(context).size.width * 0.1,
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  Position? postition;
+                  try {
+                    postition = await getLocation();
+                  } catch (e) {
+                    ///show ppermission
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                              title: Text("Access Dinied"),
+                              content: Text(
+                                  "Do you want this app to access your location"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => AppSettings.openAppSettings()
+                                      .then((value) =>
+                                          Navigator.pop(context, 'Ok')),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ));
+                    return;
+                  }
+
+                  ImageConfiguration configuration =
+                      createLocalImageConfiguration(context);
+                  var icon1 = await BitmapDescriptor.fromAssetImage(
+                      configuration, 'assets/mylocation.jpg');
+                  Marker marker = Marker(
+                    markerId: MarkerId("${postition.latitude}"),
+                    position: LatLng(postition.latitude, postition.longitude),
+                    icon: icon1,
+                    infoWindow: InfoWindow(
+                      title: "Your Location",
+                    ),
+                  );
+                  _markers.add(marker);
+                  _sinkMarkers.add(_markers);
+                  _controller.animateCamera(
+                    CameraUpdate.newCameraPosition(
+                      CameraPosition(
+                        target: LatLng(postition.latitude, postition.longitude),
+                        zoom: 17,
+                      ),
+                    ),
+                  );
+                },
+                child: Icon(Icons.my_location),
+              ),
             ),
           ]);
         });

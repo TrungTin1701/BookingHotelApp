@@ -86,7 +86,7 @@ class MyApp extends StatelessWidget {
             '/Search': (context) => SearchScreen(),
             '/editprofile': (context) => EditProfileScreen(),
             '/loginpage': (context) => LoginPage(),
-            '/map': (context) => const MapScreen(),
+            '/map': (context) => MapScreen(),
           },
         ),
       ),
