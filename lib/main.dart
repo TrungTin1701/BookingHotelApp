@@ -21,6 +21,7 @@ import 'Profile/profile.dart';
 import 'HotelPage/hotelcart.dart';
 import 'Search_Categories/Search_Screen.dart';
 import 'Login Page/login_Page.dart';
+import 'provider/Favour.dart';
 
 DateTime today = DateTime.now();
 String weekday =
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => ChangeMarker(),
         ),
+        ChangeNotifierProvider(create: (_) => Favour()),
       ],
       child: Consumer<FontProvider>(
         builder: (context, value, child) => MaterialApp(
