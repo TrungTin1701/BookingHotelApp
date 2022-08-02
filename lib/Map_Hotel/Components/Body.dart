@@ -66,7 +66,7 @@ class _MapBodyState extends State<MapBody> {
         _notifier.value = _markers;
         _sinkMarkers.add(_markers);
 
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
           //_loadListMarkers(_list);
 
           CameraPosition cameraPosition = CameraPosition(

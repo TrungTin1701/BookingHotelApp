@@ -209,7 +209,7 @@ class _image_1State extends State<image_1> {
     super.initState();
     _pageController = PageController(viewportFraction: 0.99, initialPage: 0);
 
-    WidgetsBinding.instance.addPostFrameCallback(
+    WidgetsBinding.instance?.addPostFrameCallback(
         (_) => timer = Timer.periodic(autoplayDuration, (timer) {
               var length = (imageroll.length) - 1;
               if (_pageController.hasClients) {
