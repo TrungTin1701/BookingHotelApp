@@ -1,7 +1,12 @@
 // ignore_for_file: file_names, unused_import, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flutter/material.dart' show AppBar, BuildContext, Center, Column, Key, MainAxisAlignment, Scaffold, StatelessWidget, Text, Widget;
+import 'package:flutter/material.dart' ;
 import 'package:firebase_database/firebase_database.dart';
+import 'package:new_test/CRUDFIREBASE/CourseModel.dart';
+import 'package:new_test/main.dart';
+
+import '../../HomePage/homepage.dart';
+import 'OneCourse.dart';
  class CourceScreen extends StatelessWidget {
   const CourceScreen({Key? key}) : super(key: key);
 
@@ -9,7 +14,23 @@ import 'package:firebase_database/firebase_database.dart';
   Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Courses'),
+          backgroundColor: kPrimaryColor,
+        title: const Text('Courses',
+                      style: TextStyle(color: Colors.white)),
+                      actions: [
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Home(),
+                              ),
+                            );
+                          },
+                        ),
+                      
+                      ],
         ),
         body: Center(
           child: Column(
@@ -18,6 +39,7 @@ import 'package:firebase_database/firebase_database.dart';
               Text(
                 'You have pushed the button this many times:',
               ),
+              Cource()
             ],
           ),
         ),
