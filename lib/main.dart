@@ -22,7 +22,8 @@ import 'HotelPage/hotelcart.dart';
 import 'Search_Categories/Search_Screen.dart';
 import 'Login Page/login_Page.dart';
 import 'provider/Favour.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'CRUDFIREBASE/Screen/Courses.dart';
 DateTime today = DateTime.now();
 String weekday =
     today.weekday < 7 ? 'Thứ ' + (today.weekday + 1).toString() : 'CN';
@@ -37,7 +38,9 @@ String weekday3 =
 late String dateSlug2 =
     "${weekday3} /${(today.year).toString()}-${today.month.toString().padLeft(2, '0')}-${(today.day).toString().padLeft(2, '0')},  ${today.hour}:${min}";
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   int Case = 1;
   Get.put(EditProfile());
   switch (Case) {
@@ -79,7 +82,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: MyHomePage(title: "Travel "),
           theme: ThemeData(fontFamily: value.fontFamily),
-          initialRoute: '/map',
+          initialRoute: '/courses',
           routes: {
             '/profile': (context) => const ProfileApp(),
             '/Home': (context) => const StackOver(),
@@ -89,6 +92,7 @@ class MyApp extends StatelessWidget {
             '/editprofile': (context) => EditProfileScreen(),
             '/loginpage': (context) => LoginPage(),
             '/map': (context) => MapScreen(),
+            '/courses': (context) => CourceScreen(),
           },
         ),
       ),
