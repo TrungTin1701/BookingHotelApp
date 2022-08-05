@@ -1,22 +1,29 @@
 // ignore_for_file: file_names, non_constant_identifier_names
 
-class Course {
-    DateTime ?datimeStart;
-    DateTime ?datetimeEnd;
-    String ?nameofCourse;
-    String ?description;
-    String ? ID;
-    String ?image;
-    String ?price;
-    Course({this.datimeStart, this.datetimeEnd, this.nameofCourse, this.description, this.ID, this.image, this.price});
-    factory Course.fromJson(Map<String, dynamic> json) => Course(
-        datimeStart: json["datimeStart"],
-        datetimeEnd: json["datetimeEnd"],
-        nameofCourse: json["nameofCourse"],
-        description: json["description"],
-        ID: json["ID"],
-        image: json["image"],
-        price: json["price"],
-    );
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+class Course {
+  Timestamp? DateStart;
+  Timestamp? DateEnd;
+  String? Name;
+  String? Description;
+
+  String? Image;
+  int? Price;
+  Course({
+    this.DateStart,
+    this.DateEnd,
+    this.Name,
+    this.Description,
+    this.Image,
+    this.Price,
+  });
+  factory Course.fromJson(Map<String, dynamic> json) => Course(
+        DateStart: json["DateStart"],
+        DateEnd: json["DateEnd"],
+        Name: json["Name"],
+        Description: json["Description"],
+        Image: json["Image"],
+        Price: json["Price"],
+      );
 }

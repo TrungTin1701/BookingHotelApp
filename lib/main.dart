@@ -39,7 +39,14 @@ String weekday3 =
 late String dateSlug2 =
     "${weekday3} /${(today.year).toString()}-${today.month.toString().padLeft(2, '0')}-${(today.day).toString().padLeft(2, '0')},  ${today.hour}:${min}";
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+          apiKey: "AIzaSyC993q4FRzDb-C5ombcqLtpkwNsvjUUG8Y",
+          appId: "1:416038806071:android:0cae9846e287d19ccb95b2",
+          messagingSenderId: "hehe",
+          projectId: "flutterapp-355306"));
   int Case = 2;
   Get.put(EditProfile());
   switch (Case) {
