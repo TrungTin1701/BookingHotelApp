@@ -24,6 +24,7 @@ import 'Login Page/login_Page.dart';
 import 'provider/Favour.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'CRUDFIREBASE/Screen/Courses.dart';
+
 DateTime today = DateTime.now();
 String weekday =
     today.weekday < 7 ? 'Thứ ' + (today.weekday + 1).toString() : 'CN';
@@ -38,15 +39,8 @@ String weekday3 =
 late String dateSlug2 =
     "${weekday3} /${(today.year).toString()}-${today.month.toString().padLeft(2, '0')}-${(today.day).toString().padLeft(2, '0')},  ${today.hour}:${min}";
 
-<<<<<<< HEAD
 void main() {
   int Case = 2;
-=======
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  int Case = 1;
->>>>>>> a4a72131f6ab45c12e8488f834b9189ba4ea4859
   Get.put(EditProfile());
   switch (Case) {
     case 1:
