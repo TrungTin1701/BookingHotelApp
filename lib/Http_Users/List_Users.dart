@@ -1,5 +1,5 @@
 // ignore: file_names
-// ignore_for_file: import_of_legacy_library_into_null_safe, file_names, prefer_const_constructors, duplicate_ignore, prefer_final_fields, non_constant_identifier_names, avoid_print, deprecated_member_use
+// ignore_for_file: import_of_legacy_library_into_null_safe, file_names, prefer_const_constructors, duplicate_ignore, prefer_final_fields, non_constant_identifier_names, avoid_print, deprecated_member_use, sized_box_for_whitespace
 
 import 'dart:developer';
 
@@ -230,7 +230,7 @@ class OneUSer extends StatefulWidget {
   final Person person;
   final bool isFavorite;
   // ignore: use_key_in_widget_constructors
-  OneUSer({
+  const OneUSer({
     required this.person,
     required this.isFavorite,
   });
