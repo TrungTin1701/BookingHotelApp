@@ -13,6 +13,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:new_test/provider/changeapi.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
 
 List<Marker> _list = const [
   Marker(
@@ -324,17 +325,17 @@ class _MapBodyState extends State<MapBody> {
                     ///show ppermission
                     showDialog(
                         context: context,
-                        builder: (BuildContext context) => AlertDialog(
+                        builder: (BuildContext context) => CupertinoAlertDialog(
                               title: Text("Access Dinied"),
                               content: Text(
                                   "Do you want this app to access your location"),
-                              actions: <Widget>[
-                                TextButton(
+                              actions: <CupertinoDialogAction>[
+                                CupertinoDialogAction(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Cancel'),
                                   child: const Text('Cancel'),
                                 ),
-                                TextButton(
+                                CupertinoDialogAction(
                                   onPressed: () => AppSettings.openAppSettings()
                                       .then((value) =>
                                           Navigator.pop(context, 'Ok')),
