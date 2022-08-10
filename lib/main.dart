@@ -24,6 +24,8 @@ import 'Login Page/login_Page.dart';
 import 'provider/Favour.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'CRUDFIREBASE/Screen/Courses.dart';
+import 'CRUDFIREBASE/Screen/EditCourse.dart';
+import 'CRUDFIREBASE/Screen/CreateCourse.dart';
 
 DateTime today = DateTime.now();
 String weekday =
@@ -88,7 +90,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: MyHomePage(title: "Travel "),
           theme: ThemeData(fontFamily: value.fontFamily),
-          initialRoute: '/courses',
+          initialRoute: '/Createcourse',
           routes: {
             '/profile': (context) => const ProfileApp(),
             '/Home': (context) => const StackOver(),
@@ -99,6 +101,8 @@ class MyApp extends StatelessWidget {
             '/loginpage': (context) => LoginPage(),
             '/map': (context) => MapScreen(),
             '/courses': (context) => CourceScreen(),
+            '/Editcourse': (context) => EditCourse(),
+            '/Createcourse': (context) => CreateCourse(),
           },
         ),
       ),

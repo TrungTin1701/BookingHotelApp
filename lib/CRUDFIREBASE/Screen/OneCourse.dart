@@ -1,6 +1,5 @@
-// ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, sized_box_for_whitespace
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_test/HomePage/homepage.dart';
 import 'package:new_test/CRUDFIREBASE/CourseModel.dart';
@@ -107,6 +106,26 @@ class _OneCourseState extends State<OneCourse> {
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                               color: Color.fromARGB(255, 212, 207, 207))),
+                      SizedBox(height: 10),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                                text: '\$',
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 36, 35, 35))),
+                            TextSpan(
+                                text: "${widget.course!.Price}",
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 36, 35, 35))),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
                 ),
