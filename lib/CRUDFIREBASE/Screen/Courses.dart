@@ -28,8 +28,7 @@ class _CourceScreenState extends State<CourceScreen> {
     await _courses.doc(id).delete();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         backgroundColor: kPrimaryColor,
-        content:
-            Center(child: Text("You have successfully deleted the course"))));
+        content: Text("You have successfully deleted the course")));
   }
 
   @override
