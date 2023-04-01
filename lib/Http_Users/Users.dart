@@ -6,6 +6,7 @@ class Person {
   final String firstName;
   final String lastName;
   final String avatar;
+  bool isFavour = false;
   Person(this.id, this.email, this.firstName, this.lastName, this.avatar);
   factory Person.fromJson(Map<String, dynamic> json) {
     return Person(

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:new_test/Map_Hotel/Components/Body.dart';
 
 class MapScreen extends StatelessWidget {
-  const MapScreen({Key? key}) : super(key: key);
-
+  MapScreen({Key? key}) : super(key: key);
+  final map = MapBody();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

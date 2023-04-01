@@ -1,31 +1,16 @@
-// ignore_for_file: deprecated_member_use, unnecessary_brace_in_string_interps, prefer_const_constructors, duplicate_ignore, prefer_final_fields, non_constant_identifier_names, avoid_print
+// ignore_for_file: deprecated_member_use, unnecessary_brace_in_string_interps, prefer_const_constructors, duplicate_ignore, prefer_final_fields, non_constant_identifier_names, avoid_print, file_names
 
 import 'dart:async';
 import 'package:flutter/rendering.dart';
-import 'package:get/get.dart';
 import 'package:new_test/Profile/Components/Info.dart';
-import 'package:new_test/Profile/EditProfile_Controller.dart';
-import 'package:new_test/Profile/Editprofile_Screen.dart';
-import 'package:new_test/provider/Marker_provider.dart';
-import 'package:new_test/provider/changeapi.dart';
-import 'Http_Users/List_Users.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:new_test/provider/font_provider.dart';
 import 'package:provider/provider.dart';
-import 'HotelPage/hotelcart.dart' show HotelCard;
-import 'HomePage/homepage.dart';
-import 'Map_Hotel/Map_Screen.dart';
-import 'Profile/profile.dart';
-import 'HotelPage/hotelcart.dart';
-import 'Search_Categories/Search_Screen.dart';
-import 'Login Page/login_Page.dart';
-import 'provider/Favour.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'CRUDFIREBASE/Screen/Courses.dart';
-import 'CRUDFIREBASE/Screen/EditCourse.dart';
-import 'CRUDFIREBASE/Screen/CreateCourse.dart';
+import 'package:new_test/HotelPage/hotelcart.dart' show HotelCard;
+import 'package:new_test/HomePage/homepage.dart';
+import 'package:new_test/Profile/profile.dart';
+import 'package:new_test/HotelPage/hotelcart.dart';
+import 'package:new_test/Search_Categories/Search_Screen.dart';
 
 DateTime today = DateTime.now();
 String weekday =
@@ -40,75 +25,6 @@ String weekday3 =
     today.weekday + 3 < 7 ? 'Thứ ' + (today.weekday + 4).toString() : 'CN';
 late String dateSlug2 =
     "${weekday3} /${(today.year).toString()}-${today.month.toString().padLeft(2, '0')}-${(today.day).toString().padLeft(2, '0')},  ${today.hour}:${min}";
-
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: FirebaseOptions(
-          apiKey: "AIzaSyC993q4FRzDb-C5ombcqLtpkwNsvjUUG8Y",
-          appId: "1:416038806071:android:0cae9846e287d19ccb95b2",
-          messagingSenderId: "hehe",
-          projectId: "flutterapp-355306"));
-  int Case = 2;
-  Get.put(EditProfile());
-  switch (Case) {
-    case 1:
-      return runApp(MyApp());
-
-    case 2:
-      return runApp(
-          DevicePreview(enabled: !kReleaseMode, builder: (context) => MyApp()));
-  }
-
-  //
-}
-
-class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  final StreamController currentScreenObserver = StreamController.broadcast();
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ChangeLocation()),
-        ChangeNotifierProvider(
-          create: (_) => FontProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ChangeMarker(),
-        ),
-        ChangeNotifierProvider(create: (_) => Favour()),
-      ],
-      child: Consumer<FontProvider>(
-        builder: (context, value, child) => MaterialApp(
-          useInheritedMediaQuery: true,
-          locale: DevicePreview.locale(context),
-          builder: DevicePreview.appBuilder,
-          title: 'TRAVEL HOLA',
-          debugShowCheckedModeBanner: false,
-          home: MyHomePage(title: "Travel "),
-          theme: ThemeData(fontFamily: value.fontFamily),
-          initialRoute: '/Createcourse',
-          routes: {
-            '/profile': (context) => const ProfileApp(),
-            '/Home': (context) => const StackOver(),
-            '/Home1': (context) => const Home1(),
-            '/Users': (context) => const Postpage(),
-            '/Search': (context) => SearchScreen(),
-            '/editprofile': (context) => EditProfileScreen(),
-            '/loginpage': (context) => LoginPage(),
-            '/map': (context) => MapScreen(),
-            '/courses': (context) => CourceScreen(),
-            '/Editcourse': (context) => EditCourse(),
-            '/Createcourse': (context) => CreateCourse(),
-          },
-        ),
-      ),
-    );
-  }
-}
 
 class StackOver extends StatefulWidget {
   const StackOver({Key? key}) : super(key: key);

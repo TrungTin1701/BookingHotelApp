@@ -1,15 +1,20 @@
 // ignore: file_names
-// ignore_for_file: import_of_legacy_library_into_null_safe, file_names, prefer_const_constructors, duplicate_ignore, prefer_final_fields, non_constant_identifier_names, avoid_print, deprecated_member_use
+// ignore_for_file: import_of_legacy_library_into_null_safe, file_names, prefer_const_constructors, duplicate_ignore, prefer_final_fields, non_constant_identifier_names, avoid_print, deprecated_member_use, sized_box_for_whitespace
+
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart'
     show CachedNetworkImage;
 import 'package:flutter/material.dart';
 import 'package:new_test/HomePage/homepage.dart';
+import 'package:new_test/provider/Favour.dart';
+import 'package:provider/provider.dart';
 import 'Users.dart';
 import 'http_service.dart';
 import 'package:new_test/Http_Users/ProfileUsers/profileusers.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:new_test/Http_Users/Users.dart';
 
 class Postpage extends StatefulWidget {
   const Postpage({Key? key}) : super(key: key);
@@ -24,7 +29,7 @@ class _PostpageState extends State<Postpage> {
   int page = 1;
   RefreshController _refreshController = RefreshController();
   List<Person> Posts = [];
-
+  bool isFavorite = false;
   GlobalKey _contenKey = GlobalKey();
   GlobalKey _refreshIndicatorKey = GlobalKey();
   @override
@@ -123,122 +128,32 @@ class _PostpageState extends State<Postpage> {
                   Remove(Posts[index].email);
                 }),
             SlidableAction(
-                onPressed: (context) {},
+                onPressed: (context) {
+                  setState(() {
+                    Posts[index].isFavour = !Posts[index].isFavour;
+                    context.read<Favour>().changeFavour(
+                        Posts[index].email, Posts[index].isFavour);
+                  });
+                },
                 icon: Icons.favorite_border_outlined,
                 backgroundColor: Colors.redAccent,
                 label: "Like"),
           ]),
           child: GestureDetector(
-            onTap: () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PostDetail(
-                    post: Posts[index],
-                  ),
-                ),
-              ),
-            },
-            child: Container(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: CachedNetworkImage(
-                      imageBuilder: (context, imageProvider) => Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                width: 0.0, color: Colors.transparent),
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: imageProvider,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                  offset: const Offset(2, 2),
-                                  blurRadius: 3,
-                                  color: Colors.black.withOpacity(0.1))
-                            ]),
-                      ),
-                      fit: BoxFit.cover,
-                      imageUrl: Posts[index].avatar,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) =>
-                              CircularProgressIndicator(
-                                  value: downloadProgress.progress),
-                      errorWidget: (context, url, error) => Icon(
-                        Icons.error,
-                        size: 100,
-                        color: Colors.red,
+              onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PostDetail(
+                          post: Posts[index],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 0, bottom: 0),
-                          child: Text(
-                            Posts[index].firstName +
-                                " " +
-                                Posts[index].lastName,
-                            style: const TextStyle(
-                                fontFamily: 'Roboto1',
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: "Email: ",
-                                        style: const TextStyle(
-                                            fontFamily: 'Roboto1',
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black),
-                                      ),
-                                      TextSpan(
-                                        text: Posts[index].email,
-                                        style: const TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ]),
-                        const SizedBox(
-                          height: 10.5,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                  },
+              child: OneUSer(
+                person: Posts[index],
+                isFavorite: isFavorite,
+              )),
         );
       },
       separatorBuilder: (context, index) {
@@ -308,5 +223,133 @@ class _PostpageState extends State<Postpage> {
             heroTag: null,
           )
         ]));
+  }
+}
+
+class OneUSer extends StatefulWidget {
+  final Person person;
+  final bool isFavorite;
+  // ignore: use_key_in_widget_constructors
+  const OneUSer({
+    required this.person,
+    required this.isFavorite,
+  });
+
+  @override
+  State<OneUSer> createState() => _OneUSerState();
+}
+
+class _OneUSerState extends State<OneUSer> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: CachedNetworkImage(
+              imageBuilder: (context, imageProvider) => Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 0.0, color: Colors.transparent),
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: imageProvider,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: const Offset(2, 2),
+                          blurRadius: 3,
+                          color: Colors.black.withOpacity(0.1))
+                    ]),
+              ),
+              fit: BoxFit.cover,
+              imageUrl: widget.person.avatar,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  CircularProgressIndicator(value: downloadProgress.progress),
+              errorWidget: (context, url, error) => Icon(
+                Icons.error,
+                size: 100,
+                color: Colors.red,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 0, bottom: 0),
+                  child: Text(
+                    widget.person.firstName + " " + widget.person.lastName,
+                    style: const TextStyle(
+                        fontFamily: 'Roboto1',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Email: ",
+                            style: const TextStyle(
+                                fontFamily: 'Roboto1',
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                          TextSpan(
+                            text: widget.person.email,
+                            style: const TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
+                const SizedBox(
+                  height: 10.5,
+                ),
+              ],
+            ),
+          ),
+          Consumer<Favour>(
+            builder: (context, value, child) {
+              value.isFavour == widget.person.email
+                  ? widget.person.isFavour = value.isChoose
+                  : log("message");
+              return Container(
+                height: 100,
+                width: 100,
+                child: widget.person.isFavour
+                    ? Icon(
+                        Icons.favorite_rounded,
+                        color: Colors.red,
+                      )
+                    : Icon(Icons.favorite_border, color: Colors.red),
+              );
+            },
+          )
+        ],
+      ),
+    );
   }
 }
